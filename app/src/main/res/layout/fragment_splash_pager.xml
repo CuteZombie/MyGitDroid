@@ -27,11 +27,14 @@
             android:layout_gravity="center"
             tools:ignore="UselessParent">
 
+            <!--手机框-->
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/phone" />
+
+            <!--手机内容-->
             <ImageView
                 android:id="@+id/ivPhoneBlank"
                 android:layout_width="wrap_content"
@@ -40,8 +43,10 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/screen_blank_large" />
+
+            <!--手机内容，默认透明度alpha=0-->
             <ImageView
-                android:id="@+id/ivPhoneFont"
+                android:id="@+id/ivPhoneFront"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

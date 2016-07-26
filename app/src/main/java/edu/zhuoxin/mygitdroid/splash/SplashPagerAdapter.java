@@ -26,8 +26,8 @@ public class SplashPagerAdapter extends PagerAdapter{
         };
     }
 
-    public View[] getViews() {
-        return views;
+    public View getViews(int position) {
+        return views[position];
     }
 
     @Override

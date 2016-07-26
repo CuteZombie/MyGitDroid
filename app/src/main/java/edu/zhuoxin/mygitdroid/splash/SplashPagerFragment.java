@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import butterknife.BindColor;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.zhuoxin.mygitdroid.R;
+import edu.zhuoxin.mygitdroid.splash.pager.Pager2;
 import me.relex.circleindicator.CircleIndicator;
 
 /**
@@ -21,17 +24,25 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class SplashPagerFragment extends android.support.v4.app.Fragment{
 
-    private ViewPager viewPager;
     private SplashPagerAdapter adapter;
-    private CircleIndicator indicator;//指示器
-    private FrameLayout frameLayout;//当前页面layout（为了更新背景颜色）
 
-    private FrameLayout layoutPhone;//屏幕中央的“手机”
-    private ImageView ivPhoneFront;
+    @BindColor(R.color.colorGreen) int colorGreen;
+    @BindColor(R.color.colorRed) int colorRed;
+    @BindColor(R.color.colorYellow) int colorYellow;
 
-    private int colorGreen;
-    private int colorRed;
-    private int colorYellow;
+    /** 屏幕中央的“手机”图片 */
+    @BindView(R.id.layoutPhone) FrameLayout layoutPhone;
+
+    /** 有内容的手机图片 默认透明度为0 */
+    @BindView(R.id.ivPhoneFront) ImageView ivPhoneFront;
+
+    @BindView(R.id.viewPager) ViewPager viewPager;
+
+    /** 三个小圆点 */
+    @BindView(R.id.indicator) CircleIndicator indicator;
+
+    /** 当前页面layout（为了更新背景颜色） */
+    @BindView(R.id.content) FrameLayout frameLayout;
 
     @Nullable
     @Override
@@ -42,17 +53,7 @@ public class SplashPagerFragment extends android.support.v4.app.Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(view);
-        colorGreen = getResources().getColor(R.color.colorGreen);
-        colorRed = getResources().getColor(R.color.colorRed);
-        colorYellow = getResources().getColor(R.color.colorYellow);
-
-        layoutPhone = (FrameLayout) view.findViewById(R.id.layoutPhone);
-        ivPhoneFront = (ImageView) view.findViewById(R.id.ivPhoneFont);
-
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        indicator = (CircleIndicator) view.findViewById(R.id.indicator);
-        frameLayout = (FrameLayout) view.findViewById(R.id.content);
+        ButterKnife.bind(this,view);
 
         adapter = new SplashPagerAdapter(getContext());
         viewPager.setAdapter(adapter);
@@ -123,7 +124,11 @@ public class SplashPagerFragment extends android.support.v4.app.Fragment{
 
         @Override
         public void onPageSelected(int position) {
-
+            /** 当显示出最后一个pager时，播放它自己的动画 */
+            if (position == 2) {
+                Pager2 pager2View = (Pager2) adapter.getViews(position);
+                pager2View.showAnimation();
+            }
         }
 
         @Override
