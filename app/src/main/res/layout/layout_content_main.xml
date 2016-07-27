@@ -12,6 +12,8 @@
         app:title="@string/label_main"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
+    <!--将在这个FrameLayout上面replace不同的fragment-->
+    <!--默认显示“热门仓库”fragment-->
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
