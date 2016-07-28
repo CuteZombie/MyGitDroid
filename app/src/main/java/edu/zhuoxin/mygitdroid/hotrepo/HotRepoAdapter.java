@@ -14,7 +14,7 @@ public class HotRepoAdapter extends FragmentPagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        return new RepoListFragment();
+        return new RepoListPtrFragment();
     }
 
     @Override
