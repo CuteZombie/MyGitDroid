@@ -10,16 +10,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import edu.zhuoxin.mygitdroid.commons.ActivityUtils;
 import edu.zhuoxin.mygitdroid.hotrepo.HotRepoFragment;
+import edu.zhuoxin.mygitdroid.login.LoginActivity;
+import edu.zhuoxin.mygitdroid.login.UserRepo;
 
 /**
  * 应用主页面
  *
  * */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.toolbar)Toolbar toolbar;
 
@@ -31,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /** 热门仓库 fragment */
     private HotRepoFragment hotRepoFragment;
+
+    private Button btnLogin;
+
+    private ImageView ivIcon;
+
+    private ActivityUtils activityUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +74,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /** 设置抽屉的监听 */
         drawerLayout.addDrawerListener(toggle);
 
+        btnLogin = ButterKnife.findById(
+                navigationView.getHeaderView(0),
+                R.id.btnLogin);
+        ivIcon = ButterKnife.findById(
+                navigationView.getHeaderView(0),
+                R.id.ivIcon);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activityUtils.startActivity(LoginActivity.class);
+                finish();
+            }
+        });
+
         /** 主页面默认显示热门仓库 hotRepoFragment */
         hotRepoFragment = new HotRepoFragment();
         replaceFragment(hotRepoFragment);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /** 如果没有授权 */
+        if (UserRepo.isEmpty()) {
+            btnLogin.setText(R.string.login_github);
+            return;
+        }
+        btnLogin.setText(R.string.switch_account);
+
+        /** 设置 title */
+        getSupportActionBar().setTitle(UserRepo.getUser().getName());
+
+        /** 设置用户头像 */
+        String photoUrl = UserRepo.getUser().getAvatar();
+        ImageLoader.getInstance().displayImage(photoUrl,ivIcon);
     }
 
     /** 动态替换 fragment 的方法 */

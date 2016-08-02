@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GitDroidDG</string>
+    <string name="app_name">MyGitDroid</string>
 
     <string name="login_github">登录GitHub</string>
     <string name="enter_app">直接使用</string>
@@ -45,4 +45,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="hot_user_name">流行开发者姓名</string>
+    <string name="hot_user_repo_url">流行开发者仓库URL</string>
 </resources>

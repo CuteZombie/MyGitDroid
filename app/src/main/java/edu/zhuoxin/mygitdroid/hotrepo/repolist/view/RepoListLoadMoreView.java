@@ -1,6 +1,8 @@
-package edu.zhuoxin.mygitdroid.hotrepo.view;
+package edu.zhuoxin.mygitdroid.hotrepo.repolist.view;
 
 import java.util.List;
+
+import edu.zhuoxin.mygitdroid.hotrepo.repolist.modle.Repo;
 
 /**
  * Created by Administrator on 2016/7/28.
@@ -14,6 +16,6 @@ public interface RepoListLoadMoreView {
 
     void showLoadMoreError(String msg);
 
-    void addMoreData(List<String> datas);
+    void addMoreData(List<Repo> datas);
 
 }

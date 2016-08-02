@@ -9,6 +9,7 @@ import butterknife.OnClick;
 import edu.zhuoxin.mygitdroid.MainActivity;
 import edu.zhuoxin.mygitdroid.R;
 import edu.zhuoxin.mygitdroid.commons.ActivityUtils;
+import edu.zhuoxin.mygitdroid.login.LoginActivity;
 
 /**
  * Created by Administrator on 2016/7/26.
@@ -33,7 +34,8 @@ public class SplashActivity extends AppCompatActivity{
 
     @OnClick(R.id.btnLogin)
     public void login() {
-
+        activityUtils.startActivity(LoginActivity.class);
+        finish();
     }
 
     @OnClick(R.id.btnEnter)

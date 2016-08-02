@@ -33,7 +33,7 @@ public class SplashPagerFragment extends android.support.v4.app.Fragment{
     /** 屏幕中央的“手机”图片 */
     @BindView(R.id.layoutPhone) FrameLayout layoutPhone;
 
-    /** 有内容的手机图片 默认透明度为0 */
+    /** 有内容的手机图片 默认透明度为 0 */
     @BindView(R.id.ivPhoneFront) ImageView ivPhoneFront;
 
     @BindView(R.id.viewPager) ViewPager viewPager;

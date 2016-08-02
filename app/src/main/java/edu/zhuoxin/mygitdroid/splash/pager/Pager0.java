@@ -12,6 +12,7 @@ import edu.zhuoxin.mygitdroid.R;
  *
  */
 public class Pager0 extends FrameLayout{
+
     public Pager0(Context context) {
         this(context,null);
     }

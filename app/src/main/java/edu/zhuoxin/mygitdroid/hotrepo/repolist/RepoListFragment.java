@@ -1,4 +1,4 @@
-package edu.zhuoxin.mygitdroid.hotrepo;
+package edu.zhuoxin.mygitdroid.hotrepo.repolist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,8 +20,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.zhuoxin.mygitdroid.R;
+import edu.zhuoxin.mygitdroid.commons.ActivityUtils;
 import edu.zhuoxin.mygitdroid.component.FooterView;
-import edu.zhuoxin.mygitdroid.hotrepo.view.RepoListView;
+import edu.zhuoxin.mygitdroid.hotrepo.Language;
+import edu.zhuoxin.mygitdroid.hotrepo.repolist.modle.Repo;
+import edu.zhuoxin.mygitdroid.hotrepo.repolist.view.RepoListView;
+import edu.zhuoxin.mygitdroid.repoinfo.RepoInfoActivity;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -31,21 +36,37 @@ import in.srain.cube.views.ptr.header.StoreHouseHeader;
  * 仓库列表
  * 将显示当前语言的所有仓库，有下拉刷新、上拉加载更多
  */
-public class RepoListPtrFragment extends Fragment
+public class RepoListFragment extends Fragment
         implements RepoListView {
+
+    private static final String KEY_LANGUAGE = "key_language";
+
+    public static RepoListFragment getInstance(Language language) {
+        RepoListFragment fragment = new RepoListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(KEY_LANGUAGE,language);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    private Language getLanguage() {
+        return (Language) getArguments().getSerializable(KEY_LANGUAGE);
+    }
 
     @BindView(R.id.lvRepos)ListView listView;
     @BindView(R.id.emptyView)TextView emptyView;
     @BindView(R.id.errorView)TextView errorView;
     @BindView(R.id.ptrClassicFrameLayout)PtrClassicFrameLayout ptrFrameLayout;
 
-    private ArrayAdapter<String> adapter;
+    private RepoListAdapter adapter;
 
     /** 用来做当前页面业务逻辑及视图更新 */
     private RepoListPresenter presenter;
 
     /** 上拉加载更多的视图 */
     private FooterView footerView;
+
+    private ActivityUtils activityUtils;
 
     @Nullable
     @Override
@@ -57,14 +78,20 @@ public class RepoListPtrFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
+        activityUtils = new ActivityUtils(this);
+        presenter = new RepoListPresenter(this,getLanguage());
 
-        presenter = new RepoListPresenter(this);
-
-        adapter = new ArrayAdapter<String>(
-                getContext(),
-                android.R.layout.simple_list_item_1,
-                new ArrayList<String>());
+        adapter = new RepoListAdapter();
         listView.setAdapter(adapter);
+
+        /** 按下某个仓库后，进入此仓库详情 */
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Repo repo = adapter.getItem(position);
+                RepoInfoActivity.open(getContext(),repo);
+            }
+        });
 
         //初始化下拉刷新
         initPullToRefresh();
@@ -76,9 +103,7 @@ public class RepoListPtrFragment extends Fragment
     private void initLoadMoreScroll() {
         footerView = new FooterView(getContext());
         Mugen.with(listView, new MugenCallbacks() {
-            /** 当listview滚动到底部的时候触发此方法
-             *  执行上拉加载更多的业务
-             */
+            /** 当listview滚动到底部的时候触发此方法,执行上拉加载更多的业务 */
             @Override
             public void onLoadMore() {
                 presenter.loadMore();
@@ -118,10 +143,11 @@ public class RepoListPtrFragment extends Fragment
             }
         });
 
+        /** 以下代码仅仅是修改了header的样式 */
         StoreHouseHeader header = new StoreHouseHeader(getContext());
-        header.initWithString("I LIKE JAVA");
+        header.initWithString("I LIKE " + getLanguage().getName());
         header.setPadding(0,60,0,60);
-        //修改Ptr的头部 HeaderView 效果
+        /** 修改Ptr的头部 HeaderView 效果 */
         ptrFrameLayout.setHeaderView(header);
         ptrFrameLayout.addPtrUIHandler(header);
         ptrFrameLayout.setBackgroundResource(R.color.colorRefresh);
@@ -152,14 +178,13 @@ public class RepoListPtrFragment extends Fragment
 
     @Override
     public void showMessage(String msg) {
-
+        activityUtils.showToast(msg);
     }
 
     @Override
-    public void refreshData(List<String> data) {
+    public void refreshData(List<Repo> data) {
         adapter.clear();
         adapter.addAll(data);
-        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -191,8 +216,7 @@ public class RepoListPtrFragment extends Fragment
     }
 
     @Override
-    public void addMoreData(List<String> datas) {
+    public void addMoreData(List<Repo> datas) {
         adapter.addAll(datas);
-        adapter.notifyDataSetChanged();
     }
 }
