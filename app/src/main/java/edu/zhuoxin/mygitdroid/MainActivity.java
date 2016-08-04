@@ -4,22 +4,27 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.zhuoxin.mygitdroid.commons.ActivityUtils;
+import edu.zhuoxin.mygitdroid.favorite.FavoriteFragment;
 import edu.zhuoxin.mygitdroid.hotrepo.HotRepoFragment;
+import edu.zhuoxin.mygitdroid.hotuser.userlist.HotUserFragment;
 import edu.zhuoxin.mygitdroid.login.LoginActivity;
 import edu.zhuoxin.mygitdroid.login.UserRepo;
 
@@ -40,6 +45,12 @@ public class MainActivity extends AppCompatActivity
 
     /** 热门仓库 fragment */
     private HotRepoFragment hotRepoFragment;
+
+    /** 热门开发者 fragment */
+    private HotUserFragment hotUserFragment;
+
+    /** 收藏 fragment */
+    private FavoriteFragment favoriteFragment;
 
     private Button btnLogin;
 
@@ -121,15 +132,51 @@ public class MainActivity extends AppCompatActivity
 
     /** 侧滑菜单监听器 */
     public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.github_hot_repo://最热门
 
-                break;
-            case R.id.github_hot_coder://开发者
-
-                break;
+        //设置默认选中项为 false
+        if (item.isChecked()) {
+            item.setChecked(false);
         }
 
+        switch (item.getItemId()) {
+            case R.id.github_hot_repo://最热门
+                if (!hotRepoFragment.isAdded()) {
+                    replaceFragment(hotRepoFragment);
+                }
+                break;
+            case R.id.github_hot_coder://开发者
+                if (hotUserFragment == null) hotUserFragment = new HotUserFragment();
+                if (!hotUserFragment.isAdded()){
+                    replaceFragment(hotUserFragment);
+                }
+                break;
+            case R.id.arsenal_my_repo://我的收藏
+                if (favoriteFragment == null) favoriteFragment = new FavoriteFragment();
+                if (!favoriteFragment.isAdded()) {
+                    replaceFragment(favoriteFragment);
+                }
+                break;
+        }
+        //关闭drawerLayout
+        drawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
         return true;//返回true代表将该菜单项变为checked状态
+    }
+
+    private long mExitTime;
+
+    @Override
+    public void onBackPressed() {
+        if ((System.currentTimeMillis() - mExitTime) > 1500) {
+            Toast.makeText(MainActivity.this,"再按就退出程序啦>_<",Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            finish();
+            System.exit(0);
+        }
     }
 }

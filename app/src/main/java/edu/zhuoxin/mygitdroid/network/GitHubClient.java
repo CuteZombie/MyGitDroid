@@ -1,6 +1,7 @@
 package edu.zhuoxin.mygitdroid.network;
 
 import edu.zhuoxin.mygitdroid.hotrepo.repolist.modle.RepoResult;
+import edu.zhuoxin.mygitdroid.hotuser.userlist.modle.HotUserResult;
 import edu.zhuoxin.mygitdroid.login.modle.AccessTokenResult;
 import edu.zhuoxin.mygitdroid.login.modle.User;
 import edu.zhuoxin.mygitdroid.repoinfo.RepoContentResult;
@@ -68,6 +69,12 @@ public class GitHubClient implements GitHubApi{
             @Query("q") String query,
             @Query("page") int pageId) {
         return gitHubApi.searchRepos(query,pageId);
+    }
+
+    @Override
+    public Call<HotUserResult> searchUsers(
+            @Query("q") String query, @Query("repositories") int repos) {
+        return gitHubApi.searchUsers(query,repos);
     }
 
     @Override

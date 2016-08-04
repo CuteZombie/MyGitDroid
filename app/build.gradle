@@ -56,5 +56,10 @@ dependencies {
     //io解析
     compile 'commons-io:commons-io:2.4'
 
+    //ormlite框架
+    compile 'com.j256.ormlite:ormlite-core:5.0'
+    compile 'com.j256.ormlite:ormlite-android:5.0'
+
+
 
 }

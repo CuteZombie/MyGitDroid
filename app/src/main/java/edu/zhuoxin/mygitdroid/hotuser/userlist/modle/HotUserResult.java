@@ -1,6 +1,10 @@
 package edu.zhuoxin.mygitdroid.hotuser.userlist.modle;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
+
+import edu.zhuoxin.mygitdroid.login.modle.User;
 
 /**
  * Created by Administrator on 2016/8/2.
@@ -12,7 +16,8 @@ public class HotUserResult {
 
     private boolean incomplete_results;
 
-    private List<HotUser> items;
+    @SerializedName("items")
+    private List<User> users;
 
     public boolean isIncomplete_results() {
         return incomplete_results;
@@ -22,8 +27,8 @@ public class HotUserResult {
         return total_count;
     }
 
-    public List<HotUser> getItems() {
-        return items;
+    public List<User> getAllUsers() {
+        return users;
     }
 
 

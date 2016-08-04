@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.zhuoxin.mygitdroid.R;
+import edu.zhuoxin.mygitdroid.commons.ActivityUtils;
 
 /**
  * Created by Administrator on 2016/8/2.
  *
  */
 public class HotUserFragment extends Fragment{
+
+    private ActivityUtils activityUtils;
 
     @Nullable
     @Override

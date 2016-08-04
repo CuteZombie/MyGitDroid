@@ -22,6 +22,10 @@ import butterknife.ButterKnife;
 import edu.zhuoxin.mygitdroid.R;
 import edu.zhuoxin.mygitdroid.commons.ActivityUtils;
 import edu.zhuoxin.mygitdroid.component.FooterView;
+import edu.zhuoxin.mygitdroid.favorite.dao.DBHelper;
+import edu.zhuoxin.mygitdroid.favorite.dao.LocalRepoDao;
+import edu.zhuoxin.mygitdroid.favorite.model.LocalRepo;
+import edu.zhuoxin.mygitdroid.favorite.model.RepoConverter;
 import edu.zhuoxin.mygitdroid.hotrepo.Language;
 import edu.zhuoxin.mygitdroid.hotrepo.repolist.modle.Repo;
 import edu.zhuoxin.mygitdroid.hotrepo.repolist.view.RepoListView;
@@ -93,11 +97,37 @@ public class RepoListFragment extends Fragment
             }
         });
 
+        /** 长按某个仓库后加入我的收藏 */
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //拿到热门仓库上被长按的仓库
+                Repo repo = adapter.getItem(position);
+                //用converter转换
+                LocalRepo localRepo = RepoConverter.convert(repo);
+                //添加到本地仓库中(只认本地仓库类型)
+                new LocalRepoDao(DBHelper.getInstance(getContext()))
+                        .createOrUpdate(localRepo);
+                activityUtils.showToast("收藏成功！");
+                return true;
+            }
+        });
+
         //初始化下拉刷新
         initPullToRefresh();
 
         //初始化上拉加载更多
         initLoadMoreScroll();
+
+        //如果当前页面没有数据，自动刷新
+        if (adapter.getCount() == 0) {
+            ptrFrameLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ptrFrameLayout.autoRefresh();
+                }
+            },200);
+        }
     }
 
     private void initLoadMoreScroll() {
