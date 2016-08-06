@@ -30,7 +30,6 @@ public class FooterView extends FrameLayout{
     private int state = STATE_LOADING;
 
     @BindView(R.id.progressBar)ProgressBar progressBar;
-    @BindView(R.id.tv_complete)TextView tv_complete;
     @BindView(R.id.tv_error)TextView tv_error;
 
     public FooterView(Context context) {
@@ -67,7 +66,6 @@ public class FooterView extends FrameLayout{
     public void showLoading() {
         state = STATE_LOADING;
         progressBar.setVisibility(View.VISIBLE);
-        tv_complete.setVisibility(View.GONE);
         tv_error.setVisibility(View.GONE);
     }
 
@@ -75,7 +73,6 @@ public class FooterView extends FrameLayout{
     public void showComplete() {
         state = STATE_COMPLETE;
         progressBar.setVisibility(View.GONE);
-        tv_complete.setVisibility(View.VISIBLE);
         tv_error.setVisibility(View.GONE);
     }
 
@@ -83,7 +80,6 @@ public class FooterView extends FrameLayout{
     public void showError(String errorMsg) {
         state = STATE_ERROR;
         progressBar.setVisibility(View.GONE);
-        tv_complete.setVisibility(View.GONE);
         tv_error.setVisibility(View.VISIBLE);
     }
 

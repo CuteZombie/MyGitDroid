@@ -130,6 +130,7 @@ public class RepoListFragment extends Fragment
         }
     }
 
+    /** 上拉加载更多 */
     private void initLoadMoreScroll() {
         footerView = new FooterView(getContext());
         Mugen.with(listView, new MugenCallbacks() {

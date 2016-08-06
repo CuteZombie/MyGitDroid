@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.zhuoxin.mygitdroid.commons.ActivityUtils;
 import edu.zhuoxin.mygitdroid.favorite.FavoriteFragment;
+import edu.zhuoxin.mygitdroid.gank.GankFragment;
 import edu.zhuoxin.mygitdroid.hotrepo.HotRepoFragment;
 import edu.zhuoxin.mygitdroid.hotuser.userlist.HotUserFragment;
 import edu.zhuoxin.mygitdroid.login.LoginActivity;
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity
     /** 收藏 fragment */
     private FavoriteFragment favoriteFragment;
 
+    /** 每日干货 fragment */
+    private GankFragment gankFragment;
+
     private Button btnLogin;
 
     private ImageView ivIcon;
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activityUtils = new ActivityUtils(this);
         //设置当前视图（若当前视图内容改变，将会触发onContentChanged()方法）
         setContentView(R.layout.activity_main);
     }
@@ -156,6 +161,11 @@ public class MainActivity extends AppCompatActivity
                     replaceFragment(favoriteFragment);
                 }
                 break;
+            case R.id.tips_daily://每日干货
+                if (gankFragment == null) gankFragment = new GankFragment();
+                if (!gankFragment.isAdded()) {
+                    replaceFragment(gankFragment);
+                }
         }
         //关闭drawerLayout
         drawerLayout.post(new Runnable() {
@@ -172,7 +182,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if ((System.currentTimeMillis() - mExitTime) > 1500) {
-            Toast.makeText(MainActivity.this,"再按就退出程序啦>_<",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this,"哎呀~再按就退出程序啦>_<",Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             finish();

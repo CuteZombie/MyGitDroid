@@ -37,10 +37,10 @@ public class RepoListPresenter {
         repoCall = GitHubClient.getInstance().searchRepos(
                 "language:" + language.getPath()
                 , nextPage);
-        repoCall.enqueue(repoCallback);
+        repoCall.enqueue(refreshCallback);
     }
 
-    /** 下拉加载更多 */
+    /** 上拉加载更多 */
     public void loadMore() {
         repoListView.showLoadMoreLoading();//显示加载中
         repoCall = GitHubClient.getInstance().searchRepos(
@@ -49,6 +49,7 @@ public class RepoListPresenter {
         repoCall.enqueue(loadMoreCallback);
     }
 
+    /** 上拉加载更多的 callback */
     private final Callback<RepoResult> loadMoreCallback = new Callback<RepoResult>(){
 
         @Override
@@ -70,11 +71,12 @@ public class RepoListPresenter {
         public void onFailure(Call<RepoResult> call, Throwable t) {
             // 视图停止刷新
             repoListView.hideLoadMore();
-            repoListView.showMessage("repoCallback onFailure" + t.getMessage());
+            repoListView.showMessage("loadMoreCallback onFailure" + t.getMessage());
         }
     };
 
-    private final Callback<RepoResult> repoCallback = new Callback<RepoResult>() {
+    /** 下拉刷新的 callback */
+    private final Callback<RepoResult> refreshCallback = new Callback<RepoResult>() {
         @Override public void onResponse(Call<RepoResult> call, Response<RepoResult> response) {
             // 视图停止刷新
             repoListView.stopRefresh();
@@ -100,7 +102,7 @@ public class RepoListPresenter {
         @Override public void onFailure(Call<RepoResult> call, Throwable t) {
             // 视图停止刷新
             repoListView.stopRefresh();
-            repoListView.showMessage("repoCallback onFailure" + t.getMessage());
+            repoListView.showMessage("refreshCallback onFailure" + t.getMessage());
         }
     };
 }

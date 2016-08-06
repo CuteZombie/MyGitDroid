@@ -11,17 +11,15 @@ import edu.zhuoxin.mygitdroid.login.modle.User;
 public interface HotUserPtrView {
 
     /** 显示下拉刷新时的内容视图 */
-    void showContentView();
+    void showRefreshView();
 
     /** 显示下拉刷新时的错误视图 */
     void showErrorView(String msg);
 
-    /** 显示下拉刷新时的空视图 */
-    void showEmptyView();
+    /** 隐藏下拉刷新的视图 */
+    void hideRefreshView();
 
     void showMessage(String msg);
-
-    void stopRefresh();
 
     void refreshData(List<User> data);
 }
